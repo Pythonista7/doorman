@@ -30,15 +30,15 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp" // Add this line
 	rpc "google.golang.org/grpc"
 
+	"github.com/Pythonista7/doorman/go/configuration"
+	"github.com/Pythonista7/doorman/go/connection"
+	"github.com/Pythonista7/doorman/go/flagenv"
+	"github.com/Pythonista7/doorman/go/server/doorman"
+	"github.com/Pythonista7/doorman/go/server/election"
+	"github.com/Pythonista7/doorman/go/status"
 	"github.com/ghodss/yaml"
-	"github.com/youtube/doorman/go/configuration"
-	"github.com/youtube/doorman/go/connection"
-	"github.com/youtube/doorman/go/flagenv"
-	"github.com/youtube/doorman/go/server/doorman"
-	"github.com/youtube/doorman/go/server/election"
-	"github.com/youtube/doorman/go/status"
 
-	pb "github.com/youtube/doorman/proto/doorman"
+	pb "github.com/Pythonista7/doorman/proto/doorman"
 
 	_ "expvar"
 	_ "net/http/pprof"

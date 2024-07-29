@@ -59,7 +59,7 @@ Doorman requires the clients to inform it of the desired capacity (the so-called
 - Read a [Kubernetes deployment tutorial](doc/loadtest).
 - Read about Doorman's [configuration](doc/configuration.md).
 - Read the in-depth [design doc](doc/design.md).
-- Read the [client documentation](https://godoc.org/github.com/youtube/doorman/go/client/doorman).
+- Read the [client documentation](https://godoc.org/github.com/Pythonista7/doorman/go/client/doorman).
 
 ## Status and Plans
 
@@ -89,7 +89,7 @@ export GOPATH=...
 With this out of the way, Doorman is just one go get away:
 
 ```sh
-go get github.com/youtube/doorman/go/cmd/doorman
+go get github.com/Pythonista7/doorman/go/cmd/doorman
 ```
 
 If you are interested in a checkout of Doorman that you can modify, you can do:

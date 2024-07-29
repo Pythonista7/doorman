@@ -8,11 +8,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Pythonista7/doorman/go/client/doorman"
+	"github.com/Pythonista7/doorman/go/ratelimiter"
 	log "github.com/golang/glog"
 	"github.com/pborman/uuid"
 	"github.com/prometheus/client_golang/prometheus/promhttp" // Add this line
-	"github.com/youtube/doorman/go/client/doorman"
-	"github.com/youtube/doorman/go/ratelimiter"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 

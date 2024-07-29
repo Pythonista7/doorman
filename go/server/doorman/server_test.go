@@ -24,7 +24,7 @@ import (
 	rpc "google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 
-	pb "github.com/youtube/doorman/proto/doorman"
+	pb "github.com/Pythonista7/doorman/proto/doorman"
 )
 
 func TestValidateGetCapacityRequest(t *testing.T) {

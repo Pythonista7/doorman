@@ -19,7 +19,7 @@ import (
 
 	log "github.com/golang/glog"
 
-	pb "github.com/youtube/doorman/proto/doorman"
+	pb "github.com/Pythonista7/doorman/proto/doorman"
 )
 
 // Request specifies a requested capacity lease that an Algorithm may

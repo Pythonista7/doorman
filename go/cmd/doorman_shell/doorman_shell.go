@@ -28,11 +28,11 @@ import (
 	"strconv"
 	"sync"
 
+	"github.com/Pythonista7/doorman/go/client/doorman"
 	"github.com/chzyer/readline"
 	log "github.com/golang/glog" // Add this line
 	"github.com/google/shlex"
 	"github.com/prometheus/client_golang/prometheus/promhttp" // Add this line
-	"github.com/youtube/doorman/go/client/doorman"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )

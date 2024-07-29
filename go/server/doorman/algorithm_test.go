@@ -19,8 +19,8 @@ import (
 	"testing"
 	"time"
 
+	pb "github.com/Pythonista7/doorman/proto/doorman"
 	"github.com/golang/protobuf/proto"
-	pb "github.com/youtube/doorman/proto/doorman"
 )
 
 type testCase struct {
