@@ -81,3 +81,8 @@ tramp
 
 # cask packages
 .cask/
+
+/go/cmd/doorman/doorman
+/go/cmd/doorman_client/doorman_client
+/go/cmd/doorman_shell/doorman_shell
+/doc/simplecluster/doorman

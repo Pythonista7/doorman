@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/coreos/etcd/client"
 	log "github.com/golang/glog"
+	client "go.etcd.io/etcd/client/v3"
 	"golang.org/x/net/context"
 )
 
@@ -109,31 +109,24 @@ func (e *etcd) IsMaster() chan bool {
 }
 
 func (e *etcd) Run(ctx context.Context, id string) error {
+	log.V(2).Infof("running election: %v", e)
 	c, err := client.New(client.Config{Endpoints: e.endpoints})
 	if err != nil {
 		return err
 	}
 	log.V(2).Infof("connected to etcd at %v", e.endpoints)
-	kapi := client.NewKeysAPI(c)
+	kapi := c
 
 	go func() {
-		w := kapi.Watcher(e.lock, nil)
+		// w := kapi.Watcher(e.lock, nil)
 		log.V(2).Infof("watching %v for master updates", e.lock)
 		var last string
 		for {
-			r, err := w.Next(ctx)
-			if err != nil {
-				if !client.IsKeyNotFound(err) {
-					log.Errorf("Failed receiving new master: %v", err)
-				}
-				e.current <- ""
-				time.Sleep(e.delay)
-				continue
-			}
+			r := <-c.Watcher.Watch(ctx, e.lock)
 			log.V(2).Infof("received master update: %v", r)
-			if last != r.Node.Value {
-				last = r.Node.Value
-				e.current <- r.Node.Value
+			if last != string(r.Events[0].Kv.Value) {
+				last = string(r.Events[0].Kv.Value)
+				e.current <- string(r.Events[0].Kv.Value)
 			}
 		}
 	}()
@@ -141,10 +134,14 @@ func (e *etcd) Run(ctx context.Context, id string) error {
 	go func() {
 		for {
 			log.V(2).Infof("trying to become master at %v", e.lock)
-			if _, err := kapi.Set(ctx, e.lock, id, &client.SetOptions{
-				TTL:       e.delay,
-				PrevExist: client.PrevNoExist,
-			}); err != nil {
+			masterLeaseResp, err := c.Grant(ctx, int64(e.delay.Seconds()))
+			if err != nil {
+				log.V(2).Infof("failed granting lease, retrying in %v: %v", e.delay, err)
+				time.Sleep(e.delay)
+				continue
+			}
+
+			if _, err := kapi.KV.Put(ctx, e.lock, id, client.WithLease(masterLeaseResp.ID)); err != nil {
 				log.V(2).Infof("failed becoming the master, retrying in %v: %v", e.delay, err)
 				time.Sleep(e.delay)
 				continue
@@ -154,11 +151,18 @@ func (e *etcd) Run(ctx context.Context, id string) error {
 			for {
 				time.Sleep(e.delay / 3)
 				log.V(2).Infof("Renewing mastership lease at %v as %v", e.lock, id)
-				_, err := kapi.Set(ctx, e.lock, id, &client.SetOptions{
-					TTL:       e.delay,
-					PrevExist: client.PrevExist,
-					PrevValue: id,
-				})
+				leaseResp, err := c.Grant(ctx, int64(e.delay.Seconds()))
+				if err != nil {
+					log.V(2).Infof("failed granting lease, retrying in %v: %v", e.delay, err)
+					time.Sleep(e.delay)
+					continue
+				}
+				_, err = kapi.Put(ctx, e.lock, id, client.WithLease(leaseResp.ID))
+				// &client.UserAddOptions{
+				// 	TTL:       e.delay,
+				// 	PrevExist: client.PrevExist,
+				// 	PrevValue: id,
+				// }
 
 				if err != nil {
 					log.V(2).Info("lost mastership")

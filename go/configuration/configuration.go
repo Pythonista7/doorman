@@ -10,9 +10,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/coreos/etcd/client"
 	log "github.com/golang/glog"
 	"github.com/youtube/doorman/go/timeutil"
+	client "go.etcd.io/etcd/client/v3"
 	"golang.org/x/net/context"
 )
 
@@ -59,7 +59,7 @@ func Etcd(path string, endpoints []string) Source {
 	req := make(chan context.Context)
 
 	go func() {
-		var c client.Client
+		var c *client.Client
 		for i := 0; true; i++ {
 			var err error
 			c, err = client.New(client.Config{Endpoints: endpoints})
@@ -72,26 +72,26 @@ func Etcd(path string, endpoints []string) Source {
 			break
 		}
 		log.V(2).Infof("configuration: connected to etcd")
-		kapi := client.NewKeysAPI(c)
+		kapi := c
 
 		r, err := kapi.Get(<-req, path, nil)
 		if err != nil {
 			updates <- pair{err: err}
 		} else {
-			updates <- pair{data: []byte(r.Node.Value)}
+			updates <- pair{data: []byte(r.Kvs[0].Value)}
 		}
 
-		w := kapi.Watcher(path, nil)
+		// w := kapi.Watcher(path, nil)
 
 		for i := 0; true; i++ {
 			ctx := <-req
-			r, err := w.Next(ctx)
+			r := <-c.Watcher.Watch(ctx, path)
 			if err != nil {
 				updates <- pair{err: err}
 				time.Sleep(timeutil.Backoff(1*time.Second, 60*time.Second, i))
 				continue
 			}
-			updates <- pair{data: []byte(r.Node.Value)}
+			updates <- pair{data: []byte(r.Events[0].Kv.Value)}
 		}
 
 	}()

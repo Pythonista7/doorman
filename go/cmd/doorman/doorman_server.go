@@ -24,11 +24,11 @@ import (
 	"time"
 
 	"golang.org/x/net/context"
+	"google.golang.org/grpc/credentials"
 
 	log "github.com/golang/glog"
-	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp" // Add this line
 	rpc "google.golang.org/grpc"
-	"google.golang.org/grpc/credentials"
 
 	"github.com/ghodss/yaml"
 	"github.com/youtube/doorman/go/configuration"
@@ -226,9 +226,7 @@ func main() {
 	http.Handle("/", http.RedirectHandler("/debug/status", http.StatusMovedPermanently))
 	AddServer(dm)
 
-	http.Handle("/metrics", prometheus.Handler())
-
-	go http.ListenAndServe(fmt.Sprintf(":%v", *debugPort), nil)
+	http.Handle("/metrics", promhttp.Handler()) // Change prometheus.Handler() to promhttp.Handler()bugPort), nil)
 
 	// Waits for the server to get its initial configuration. This guarantees that
 	// the server will never run without a valid configuration.
