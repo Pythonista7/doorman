@@ -1,4 +1,4 @@
-module github.com/youtube/doorman
+module github.com/Pythonista7/doorman
 
 go 1.22.5
 

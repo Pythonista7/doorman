@@ -8,6 +8,7 @@ import (
 
 	log "github.com/golang/glog"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp" // Add this line
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
@@ -47,7 +48,7 @@ func main() {
 		log.Exitf("failed to listen: %v", err)
 	}
 
-	http.Handle("/metrics", prometheus.Handler())
+	http.Handle("/metrics", promhttp.Handler())
 	go http.ListenAndServe(fmt.Sprintf(":%v", *debugPort), nil)
 	s := grpc.NewServer()
 	pb.RegisterGreeterServer(s, &server{})
