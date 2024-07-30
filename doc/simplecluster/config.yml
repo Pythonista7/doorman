@@ -5,16 +5,16 @@ resources:
     description: proportional example
     algorithm:
       kind: PROPORTIONAL_SHARE
-      lease_length: 15
-      refresh_interval: 5
+      lease_length: 60
+      refresh_interval: 30
   - identifier_glob: fair
     capacity: 1000
     safe_capacity: 10
     description: fair share example
     algorithm:
       kind: FAIR_SHARE
-      lease_length: 15
-      refresh_interval: 5
+      lease_length: 60
+      refresh_interval: 30
   - identifier_glob: "*"
     capacity: 1000
     safe_capacity: 10
@@ -22,4 +22,4 @@ resources:
     algorithm:
       kind: FAIR_SHARE
       lease_length: 60
-      refresh_interval: 15
+      refresh_interval: 30

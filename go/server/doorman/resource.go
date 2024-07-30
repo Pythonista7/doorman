@@ -19,9 +19,9 @@ import (
 	"sync"
 	"time"
 
-	pb "github.com/Pythonista7/doorman/proto/doorman"
 	log "github.com/golang/glog"
 	"github.com/golang/protobuf/proto"
+	pb "github.com/pythonista7/doorman/proto/doorman"
 )
 
 // NOTE(ryszard): Any exported Resource methods are responsible for

@@ -27,7 +27,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/Pythonista7/doorman/go/client/doorman"
+	"github.com/pythonista7/doorman/go/client/doorman"
 )
 
 var (

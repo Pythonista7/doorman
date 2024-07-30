@@ -22,7 +22,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 
-	"github.com/Pythonista7/doorman/go/client/doorman"
+	"github.com/pythonista7/doorman/go/client/doorman"
 )
 
 // RateLimiter is a rate limiter that works with Doorman resources.

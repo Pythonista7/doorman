@@ -1,8 +1,9 @@
-module github.com/Pythonista7/doorman
+module github.com/pythonista7/doorman
 
 go 1.22.5
 
 require (
+	github.com/pythonista7/doorman v0.0.0-20240729122101-b90ff3716477
 	github.com/chzyer/readline v1.5.1
 	github.com/ghodss/yaml v1.0.0
 	github.com/golang/glog v1.2.2
@@ -13,7 +14,7 @@ require (
 	go.etcd.io/etcd/client/v3 v3.5.15
 	golang.org/x/net v0.27.0
 	google.golang.org/grpc v1.65.0
-	google.golang.org/grpc/examples v0.0.0-20240726222858-3eb01450ff91
+	google.golang.org/grpc/examples v0.0.0-20240729170412-ec9dff77b186
 )
 
 require (
@@ -23,7 +24,6 @@ require (
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/kr/text v0.2.0 // indirect
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.53.0 // indirect
 	github.com/prometheus/procfs v0.15.0 // indirect

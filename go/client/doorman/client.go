@@ -29,15 +29,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Pythonista7/doorman/go/connection"
-	"github.com/Pythonista7/doorman/go/timeutil"
 	log "github.com/golang/glog"
 	"github.com/golang/protobuf/proto"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/pythonista7/doorman/go/connection"
+	"github.com/pythonista7/doorman/go/timeutil"
 	"golang.org/x/net/context"
 	rpc "google.golang.org/grpc"
 
-	pb "github.com/Pythonista7/doorman/proto/doorman"
+	pb "github.com/pythonista7/doorman/proto/doorman"
 )
 
 const (

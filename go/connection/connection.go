@@ -20,11 +20,11 @@ package connection
 import (
 	"time"
 
-	"github.com/Pythonista7/doorman/go/timeutil"
 	log "github.com/golang/glog"
+	"github.com/pythonista7/doorman/go/timeutil"
 	rpc "google.golang.org/grpc"
 
-	pb "github.com/Pythonista7/doorman/proto/doorman"
+	pb "github.com/pythonista7/doorman/proto/doorman"
 )
 
 const (

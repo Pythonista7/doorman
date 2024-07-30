@@ -10,8 +10,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Pythonista7/doorman/go/timeutil"
 	log "github.com/golang/glog"
+	"github.com/pythonista7/doorman/go/timeutil"
 	client "go.etcd.io/etcd/client/v3"
 	"golang.org/x/net/context"
 )

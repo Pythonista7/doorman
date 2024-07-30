@@ -18,8 +18,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/Pythonista7/doorman/go/client/doorman"
 	log "github.com/golang/glog"
+	"github.com/pythonista7/doorman/go/client/doorman"
 	"golang.org/x/net/context"
 )
 

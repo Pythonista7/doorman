@@ -20,7 +20,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	pb "github.com/Pythonista7/doorman/proto/doorman"
+	pb "github.com/pythonista7/doorman/proto/doorman"
 )
 
 const (

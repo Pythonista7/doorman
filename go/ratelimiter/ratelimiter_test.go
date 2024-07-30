@@ -19,7 +19,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Pythonista7/doorman/go/client/doorman"
+	"github.com/pythonista7/doorman/go/client/doorman"
 	"golang.org/x/net/context"
 )
 
