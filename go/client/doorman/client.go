@@ -157,8 +157,8 @@ type Client struct {
 	// conn keeps information about this client's connection to the server.
 	conn *connection.Connection
 
-	// resources keeps currently claimed resources.
-	resources map[string]*resourceImpl
+	// Resources keeps currently claimed Resources.
+	Resources map[string]*resourceImpl
 
 	// Channels for synchronization with the client's goroutine.
 	newResource     chan resourceAction
@@ -189,7 +189,7 @@ func NewWithID(addr string, id string, opts ...Option) (*Client, error) {
 	client := &Client{
 		id:              id,
 		conn:            conn,
-		resources:       make(map[string]*resourceImpl),
+		Resources:       make(map[string]*resourceImpl),
 		newResource:     make(chan resourceAction),
 		releaseResource: make(chan resourceAction),
 		goRoutineHalted: make(chan bool),
@@ -278,19 +278,19 @@ func (client *Client) run() {
 }
 
 func (client *Client) addResource(res *resourceImpl) error {
-	if _, ok := client.resources[res.id]; ok {
+	if _, ok := client.Resources[res.id]; ok {
 		return ErrDuplicateResourceID
 	}
-	client.resources[res.id] = res
+	client.Resources[res.id] = res
 	return nil
 }
 
 func (client *Client) removeResource(res *resourceImpl) error {
-	if _, ok := client.resources[res.id]; !ok {
+	if _, ok := client.Resources[res.id]; !ok {
 		return nil
 	}
 
-	delete(client.resources, res.id)
+	delete(client.Resources, res.id)
 	close(res.capacity)
 
 	in := &pb.ReleaseCapacityRequest{
@@ -316,7 +316,7 @@ func (client *Client) performRequests(retryNumber int) (interval time.Duration, 
 
 	// Adds all resources in this client's resource registry to the
 	// request.
-	for id, resource := range client.resources {
+	for id, resource := range client.Resources {
 		in.Resource = append(in.Resource, &pb.ResourceRequest{
 			Priority:   proto.Int64(resource.priority),
 			ResourceId: proto.String(id),
@@ -337,7 +337,7 @@ func (client *Client) performRequests(retryNumber int) (interval time.Duration, 
 		// Expired resources only need to be handled if the
 		// RPC failed: otherwise the client has gotten a
 		// refreshed lease.
-		for _, res := range client.resources {
+		for _, res := range client.Resources {
 			if res.expires().Before(time.Now()) {
 				res.lease = nil
 				// FIXME(ryszard): This probably should be the safe
@@ -349,7 +349,7 @@ func (client *Client) performRequests(retryNumber int) (interval time.Duration, 
 	}
 
 	for _, pr := range out.Response {
-		res, ok := client.resources[pr.GetResourceId()]
+		res, ok := client.Resources[pr.GetResourceId()]
 
 		if !ok {
 			log.Errorf("response for non-existing resource: %q", pr.GetResourceId())
@@ -380,7 +380,7 @@ func (client *Client) performRequests(retryNumber int) (interval time.Duration, 
 	// Finds the minimal refresh interval.
 	interval = veryLongTime
 
-	for _, res := range client.resources {
+	for _, res := range client.Resources {
 		if refresh := time.Duration(res.lease.GetRefreshInterval()) * time.Second; refresh < interval {
 			interval = refresh
 		}
@@ -428,10 +428,10 @@ func (client *Client) Close() {
 
 	in := &pb.ReleaseCapacityRequest{
 		ClientId:   proto.String(client.id),
-		ResourceId: make([]string, len(client.resources)),
+		ResourceId: make([]string, len(client.Resources)),
 	}
 
-	for id, res := range client.resources {
+	for id, res := range client.Resources {
 		in.ResourceId = append(in.ResourceId, id)
 		close(res.capacity)
 	}
