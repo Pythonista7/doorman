@@ -278,25 +278,25 @@ func (client *Client) run() {
 }
 
 func (client *Client) addResource(res *resourceImpl) error {
-	if _, ok := client.Resources[res.id]; ok {
+	if _, ok := client.Resources[res.Id]; ok {
 		return ErrDuplicateResourceID
 	}
-	client.Resources[res.id] = res
+	client.Resources[res.Id] = res
 	return nil
 }
 
 func (client *Client) removeResource(res *resourceImpl) error {
-	if _, ok := client.Resources[res.id]; !ok {
+	if _, ok := client.Resources[res.Id]; !ok {
 		return nil
 	}
 
-	delete(client.Resources, res.id)
+	delete(client.Resources, res.Id)
 	close(res.capacity)
 
 	in := &pb.ReleaseCapacityRequest{
 		ClientId: proto.String(client.id),
 		ResourceId: []string{
-			res.id,
+			res.Id,
 		}}
 	_, err := client.releaseCapacity(in)
 
@@ -338,7 +338,7 @@ func (client *Client) performRequests(retryNumber int) (interval time.Duration, 
 		// RPC failed: otherwise the client has gotten a
 		// refreshed lease.
 		for _, res := range client.Resources {
-			if res.expires().Before(time.Now()) {
+			if res.Expires().Before(time.Now()) {
 				res.lease = nil
 				// FIXME(ryszard): This probably should be the safe
 				// capacity instead.
@@ -406,7 +406,7 @@ func (client *Client) Resource(id string, capacity float64) (Resource, error) {
 // by id, with the provided priority.
 func (client *Client) ResourceWithPriority(id string, capacity float64, priority int64) (Resource, error) {
 	res := &resourceImpl{
-		id:       id,
+		Id:       id,
 		wants:    capacity,
 		priority: priority,
 		capacity: make(chan float64, capacityChannelSize),
@@ -490,7 +490,7 @@ func (client *Client) getCapacity(in *pb.GetCapacityRequest) (*pb.GetCapacityRes
 
 // resourceImpl is the implementation of Resource.
 type resourceImpl struct {
-	id       string
+	Id       string
 	priority int64
 	capacity chan float64
 	client   *Client
@@ -503,9 +503,9 @@ type resourceImpl struct {
 	wants float64
 }
 
-// expires returns the time at which the lease for this resource will
+// Expires returns the time at which the lease for this resource will
 // expire.
-func (res *resourceImpl) expires() time.Time {
+func (res *resourceImpl) Expires() time.Time {
 	return time.Unix(res.lease.GetExpiryTime(), 0)
 }
 
