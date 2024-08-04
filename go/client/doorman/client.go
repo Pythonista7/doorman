@@ -329,7 +329,7 @@ func (client *Client) performRequests(retryNumber int) (interval time.Duration, 
 		log.Infof("GetCapacity: retry number %v: %v", retryNumber, in)
 	}
 
-	out, err := client.getCapacity(in)
+	out, err := client.GetCapacity(in)
 
 	if err != nil {
 		log.Errorf("GetCapacityRequest: %v", err)
@@ -463,9 +463,9 @@ func (client *Client) releaseCapacity(in *pb.ReleaseCapacityRequest) (*pb.Releas
 	return out.(*pb.ReleaseCapacityResponse), err
 }
 
-// getCapacity Executes this RPC against the current master. Returns the GetCapacity RPC
+// GetCapacity Executes this RPC against the current master. Returns the GetCapacity RPC
 // response, or nil if an error occurred.
-func (client *Client) getCapacity(in *pb.GetCapacityRequest) (*pb.GetCapacityResponse, error) {
+func (client *Client) GetCapacity(in *pb.GetCapacityRequest) (*pb.GetCapacityResponse, error) {
 	// context.TODO(ryszard): Plumb a context through.
 	out, err := client.conn.ExecuteRPC(func() (connection.HasMastership, error) {
 		start := time.Now()
