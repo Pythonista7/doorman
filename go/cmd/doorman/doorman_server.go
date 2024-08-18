@@ -228,6 +228,8 @@ func main() {
 
 	http.Handle("/metrics", promhttp.Handler()) // Change prometheus.Handler() to promhttp.Handler()bugPort), nil)
 
+	go http.ListenAndServe(fmt.Sprintf(":%v", *debugPort), nil)
+
 	// Waits for the server to get its initial configuration. This guarantees that
 	// the server will never run without a valid configuration.
 	log.Info("Waiting for the server to be configured...")
